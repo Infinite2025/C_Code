@@ -59,6 +59,55 @@ void deleteNode(Node *&head, Node *&tail, Node *delNote){
     }
     delete delNote; // Free the memory of the deleted node
 }
+void swap(Node *&head, Node *&tail, Node *node1, Node *node2){
+    if (node1 == node2) return; // If both nodes are the same, do nothing
+    if (node1->prev != nullptr) {
+        node1->prev->next = node2; // Update previous node's next pointer
+    } else {
+        head = node2; // If node1 is head, update head to node2
+    }
+    if (node2->prev != nullptr) {
+        node2->prev->next = node1; // Update previous node's next pointer for node2
+    } else {
+        head = node1; // If node2 is head, update head to node1
+    }
+    if (node1->next != nullptr) {
+        node1->next->prev = node2; // Update next node's previous pointer for node1
+    } else {
+        tail = node2; // If node1 is tail, update tail to node2
+    }
+    if (node2->next != nullptr) {
+        node2->next->prev = node1; // Update next node's previous pointer for node2
+    } else {
+        tail = node1; // If node2 is tail, update tail to node1
+    }
+    
+    // Swap next and prev pointers of both nodes
+    Node* tempNext = node1->next;
+    Node* tempPrev = node1->prev;
+    
+    node1->next = node2->next;
+    node1->prev = node2->prev;
+    
+    node2->next = tempNext;
+    node2->prev = tempPrev;
+}
+
+void BubbleSort(Node *&head, Node *&tail) {
+    if (head == nullptr || head->next == nullptr) return; // If the list is empty or has only one node, no need to sort
+    bool swapped;
+    do {
+        swapped = false;
+        Node* current = head;
+        while (current->next != nullptr) {
+            if (current->value > current->next->value) {
+                swap(head, tail, current, current->next); // Swap nodes if they are in the wrong order
+                swapped = true; // Set swapped to true to indicate a swap occurred
+            }
+            current = current->next; // Move to the next node
+        }
+    } while (swapped); // Repeat until no swaps occur
+}
 int main(){
     Node* A = new Node(8);
     Node* B = new Node(5);
